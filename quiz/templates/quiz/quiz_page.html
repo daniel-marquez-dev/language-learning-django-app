@@ -1,0 +1,24 @@
+<h1> Quiz de Vocabulario</h1>
+
+{% if result %}
+    <h3 style="color: blue;">{{ result }}</h3>
+    <a href="{% url 'quiz' %}">Probar otra palabra</a>
+{% endif %}
+
+<hr>
+
+{% if word %}
+    <p>¿Cómo se traduce la palabra?</p>
+    <h2><strong>{{ word.original }}</strong></h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="word_id" value="{{ word.id }}">
+        
+        <input type="text" name="answer" placeholder="Tu respuesta..." required autofocus>
+        <button type="submit">Comprobar</button>
+    </form>
+{% endif %}
+
+<br>
+<a href="{% url 'word_list' %}">Volver a la lista</a>

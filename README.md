@@ -30,27 +30,28 @@ This module serves as the core dictionary of the application, allowing users to 
 ```Windows
 python -m venv venv
 ```
-```Windows
 # Windows:
+```Windows
 .\venv\Scripts\activate
 ```
 
-```bash
 # macOS/Linux:
+```bash
 source venv/bin/activate
 ```
-```Windows
 3. **Install Dependencies:**
+```Windows
 pip install django
 ```
-```Windows
 4. **Initialize Database:**
+```Windows
 python manage.py makemigrations
 python manage.py migrate
 ```
 5. **Run the Application:**
+``` Windows
 python manage.py runserver
-
+```
 **Project Structure (Vocabulary App)**
 models.py: Database schema for words.
 

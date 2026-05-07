@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>List of Words</title>
-</head>
-<body>
+    <head>
+        <title>List of Words</title>
+    </head>
+    <body>
+        
+    #ADD WORD PAGE LINK
+    <a href="{% url 'add_word' %}">+ Añadir nueva palabra</a>
+    <hr>
     <h1>List of Words</h1>
     <ul>
         {% for word in words %}

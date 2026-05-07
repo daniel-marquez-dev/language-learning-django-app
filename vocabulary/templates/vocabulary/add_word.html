@@ -1,0 +1,8 @@
+<h1>Añadir Nueva Palabra</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Guardar palabra</button>
+</form>
+<br>
+<a href="{% url 'word_list' %}">Volver a la lista</a>

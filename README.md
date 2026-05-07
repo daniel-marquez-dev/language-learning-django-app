@@ -24,23 +24,30 @@ This module serves as the core dictionary of the application, allowing users to 
    ```bash
    git clone <your-repository-url>
    cd language-learning-django-app
+   ```
 
 2. **Set up a Virtual Environment:**
+```Windows
 python -m venv venv
-
+```
+```Windows
 # Windows:
 .\venv\Scripts\activate
+```
 
+```bash
 # macOS/Linux:
 source venv/bin/activate
-
+```
+```Windows
 3. **Install Dependencies:**
 pip install django
-
+```
+```Windows
 4. **Initialize Database:**
 python manage.py makemigrations
 python manage.py migrate
-
+```
 5. **Run the Application:**
 python manage.py runserver
 

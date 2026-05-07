@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'vocabulary',  # Add your app here.
+    'vocabulary',
+    'quiz',  # Add your app here.
 ]
 
 MIDDLEWARE = [

@@ -3,18 +3,17 @@ from django.shortcuts import render, redirect
 from vocabulary.models import Word
 
 def quiz_view(request):
-    # 1. Asegurar que el score exista en la sesión
     if 'score' not in request.session:
         request.session['score'] = 0
 
-    # 2. Recuperar el mensaje del intento anterior (si existe)
     result = request.session.pop('quiz_result', None)
     
-    # 3. Obtener el idioma de la URL y el de la sesión para comparar
+    # Recuperamos parámetros de la URL
     language_choice = request.GET.get('language')
+    difficulty = request.GET.get('difficulty', 'all') # Por defecto 'all'
     last_language = request.session.get('last_language')
 
-    # 4. RESET de puntuación: Solo si el idioma seleccionado es distinto al anterior
+    # Reset de puntuación si cambia el idioma
     if language_choice != last_language:
         request.session['score'] = 0
         request.session['last_language'] = language_choice
@@ -25,7 +24,6 @@ def quiz_view(request):
         user_answer = request.POST.get("answer", "").lower().strip()
         word_obj = Word.objects.get(id=word_id)
 
-        # Lógica de puntuación
         if user_answer == word_obj.translation.lower().strip():
             request.session['quiz_result'] = f"✅ ¡Correcto! {word_obj.original} es {word_obj.translation}"
             request.session['score'] += 1
@@ -35,17 +33,26 @@ def quiz_view(request):
         
         request.session.modified = True
         
-        # Redirigimos para cargar una nueva palabra al azar
-        return redirect(f"{request.path}?language={language_choice or ''}")
+        # Al redirigir mantenemos idioma y dificultad
+        return redirect(f"{request.path}?language={language_choice or ''}&difficulty={difficulty}")
 
     else:
-        # 5. Selección puramente aleatoria
         words = Word.objects.all()
         if language_choice:
             words = words.filter(language__iexact=language_choice)
 
-        if words.exists():
-            # Elige cualquier palabra de la lista sin filtros de historial
+        # --- LÓGICA DE DIFICULTAD ---
+        if difficulty == 'easy':
+            # Palabras de 1 a 4 letras
+            words = [w for w in words if len(w.original) <= 4]
+        elif difficulty == 'medium':
+            # Palabras de 5 a 8 letras
+            words = [w for w in words if 5 <= len(w.original) <= 8]
+        elif difficulty == 'hard':
+            # Palabras de más de 8 letras
+            words = [w for w in words if len(w.original) > 8]
+
+        if words: # Si la lista filtrada tiene palabras
             selected_word = random.choice(words)
         else:
             selected_word = None
@@ -54,5 +61,6 @@ def quiz_view(request):
         "word": selected_word,
         "result": result,
         "current_language": language_choice,
+        "current_difficulty": difficulty,
         "score": request.session['score']
     })

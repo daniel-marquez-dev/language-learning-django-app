@@ -1,4 +1,4 @@
-Quiz Module (Implemented by Intern 2) 🧠
+Quiz Module (Implemented by Intern 2)
 
 
 Este módulo complementa el diccionario de vocabulario mediante una interfaz de aprendizaje interactiva, permitiendo a los usuarios poner a prueba sus conocimientos de manera dinámica.

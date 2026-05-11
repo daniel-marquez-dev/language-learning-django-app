@@ -18,9 +18,20 @@
 
           <hr />
 
-          <ul class="list-group shadow-sm">
+          <div class="mb-3">
+            <label for="filterLanguage" class="form-label text-muted small">Filter by language:</label>
+            <select class="form-select shadow-sm" id="filterLanguage">
+              <option value="all">All languages</option>
+              {% regroup words by language as language_list %}
+              {% for lang in language_list %}
+                <option value="{{ lang.grouper }}">{{ lang.grouper }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <ul class="list-group shadow-sm" id="wordList">
             {% for word in words %}
-              <li class="list-group-item d-flex justify-content-between align-items-center">
+              <li class="list-group-item d-flex justify-content-between align-items-center word-item" data-lang="{{ word.language }}">
                 <div>
                   <span class="fw-bold text-primary">{{ word.original }}</span>
                   <span class="text-muted mx-2">→</span>
@@ -42,5 +53,28 @@
     </main>
 
     {% bootstrap_javascript %}
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const filterSelect = document.getElementById('filterLanguage')
+      
+        filterSelect.addEventListener('change', function () {
+          const selectedLang = this.value
+          const items = document.querySelectorAll('.word-item')
+      
+          items.forEach((item) => {
+            const itemLang = item.getAttribute('data-lang')
+      
+            if (selectedLang === 'all' || itemLang === selectedLang) {
+              item.classList.remove('d-none')
+              item.classList.add('d-flex')
+            } else {
+              item.classList.add('d-none')
+              item.classList.remove('d-flex')
+            }
+          })
+        })
+      })
+    </script>
   </body>
 </html>

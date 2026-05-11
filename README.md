@@ -1,35 +1,28 @@
 <<<<<<< HEAD
-Quiz Module (Implemented by Intern 2)
-
-
 <<<<<<< HEAD
-
-Este módulo complementa el diccionario de vocabulario mediante una interfaz de aprendizaje interactiva, permitiendo a los usuarios poner a prueba sus conocimientos de manera dinámica.
-
-Features Dynamic Language Filtering: Implementación de filtrado por idioma a través de parámetros en la URL, permitiendo sesiones de práctica personalizadas.
+Quiz Module (Implemented by Intern 2)
 =======
-Este módulo complementa el diccionario de vocabulario mediante una interfaz de aprendizaje interactiva, permitiendo a los usuarios poner a prueba sus conocimientos de manera dinámica.
+Quiz Module (Implemented by Intern 2) 
+>>>>>>> a1cdbfe68f64b4803d3d1535d0431e37728da76c
+
+
+This module complements the vocabulary dictionary through an interactive learning interface, allowing users to test their knowledge dynamically.
 
 Features
-Dynamic Language Filtering: Implementación de filtrado por idioma a través de parámetros en la URL, permitiendo sesiones de práctica personalizadas.
->>>>>>> efa5738a56b0e9ab7400ea5e372fbbd2097a2011
+Dynamic Language Filtering: Implementation of language filtering via URL parameters, enabling personalized practice sessions.
 
-Session-Based Scoring: Sistema de puntuación persistente (+1 acierto, -1 fallo) utilizando django.contrib.sessions, lo que permite seguir el progreso sin necesidad de autenticación.
+Session-Based Scoring: A persistent scoring system (+1 for correct, -1 for incorrect) using django.contrib.sessions, allowing progress tracking without requiring authentication.
 
-Randomized Learning Logic: Algoritmo que selecciona palabras de forma aleatoria de la base de datos para garantizar que cada sesión de estudio sea única.
+Randomized Learning Logic: An algorithm that selects words randomly from the database to ensure every study session is unique.
 
-Post/Redirect/Get Pattern: Implementación de redirecciones tras el envío de formularios para evitar el reenvío de datos al recargar y asegurar la integridad del puntaje.
+Post/Redirect/Get Pattern: Implementation of form redirection to prevent data resubmission on page refresh and ensure score integrity.
 
-State Management: Lógica inteligente de reinicio de puntuación que detecta cambios de idioma para mantener la coherencia en las métricas de aprendizaje.
+State Management: Intelligent score-reset logic that detects language changes to maintain consistency in learning metrics.
 
-UX-Focused Feedback: Sistema de mensajes temporales (Success/Error) integrados en el flujo de la sesión para retroalimentación inmediata del usuario.
+UX-Focused Feedback: A system of temporary messages (Success/Error) integrated into the session flow for immediate user feedback.
 
-<<<<<<< HEAD
-Tech Stack Framework: Django 5.x
-=======
 Tech Stack
 Framework: Django 5.x
->>>>>>> efa5738a56b0e9ab7400ea5e372fbbd2097a2011
 
 Language: Python 3.x
 
@@ -37,43 +30,30 @@ Session Management: Django Session Engine
 
 Frontend: Django Templates (HTML/CSS)
 
-<<<<<<< HEAD
-Setup & Installation El proceso de instalación es el mismo que en el módulo principal.
-=======
 Setup & Installation
-El proceso de instalación es el mismo que en el módulo principal.
->>>>>>> efa5738a56b0e9ab7400ea5e372fbbd2097a2011
+The installation process is the same as the main module.
 
-Activar Entorno Virtual: (Ver instrucciones de Intern 1)
+Activate Virtual Environment: (See Intern 1 instructions).
 
-Migrar la Base de Datos:
+Migrate the Database:
 
-<<<<<<< HEAD
-Bash python manage.py migrate Poblar Vocabulario: Es necesario añadir palabras desde el panel de administración o el formulario de vocabulario antes de iniciar el Quiz.
-
-Project Structure (Quiz App) views.py: Manejo de la lógica de puntuación, control de sesiones y selección aleatoria de términos.
-=======
 Bash
 python manage.py migrate
-Poblar Vocabulario: Es necesario añadir palabras desde el panel de administración o el formulario de vocabulario antes de iniciar el Quiz.
+Populate Vocabulary: You must add words via the admin panel or the vocabulary form before starting the Quiz.
 
 Project Structure (Quiz App)
-views.py: Manejo de la lógica de puntuación, control de sesiones y selección aleatoria de términos.
->>>>>>> efa5738a56b0e9ab7400ea5e372fbbd2097a2011
+views.py: Handles scoring logic, session control, and random term selection.
 
-urls.py: Mapeo de rutas para la vista principal del Quiz.
+urls.py: Route mapping for the main Quiz view.
 
-templates/quiz/: Interfaz de usuario dinámica que muestra la palabra a traducir, el resultado del intento anterior y el marcador actual.
+templates/quiz/: Dynamic user interface showing the word to translate, the result of the previous attempt, and the current scoreboard.
+
+Usage
+Start General Practice: http://127.0.0.1:8000/quiz/
+
+Practice by Specific Language: http://127.0.0.1:8000/quiz/?language=english
 
 <<<<<<< HEAD
-Usage Iniciar Práctica General: http://127.0.0.1:8000/quiz/
-=======
-Usage
-Iniciar Práctica General: http://127.0.0.1:8000/quiz/
->>>>>>> efa5738a56b0e9ab7400ea5e372fbbd2097a2011
-
-Práctica por Idioma Específico: http://127.0.0.1:8000/quiz/?language=ingles
-
 Siguiente Palabra: Utiliza el botón "Siguiente" para cambiar de término manteniendo tu puntuación actual.
 =======
 # Language Learning Django App 🌍
@@ -152,3 +132,6 @@ Manage data via the admin panel: http://127.0.0.1:8000/admin/
 
 Developed by Daniel Márquez Quintero - Intern 1
 >>>>>>> 60001d4ad1378faa05398c51c2ef972f7c18a2d5
+=======
+Next Word: Use the "Next" button to switch terms while maintaining your current score.
+>>>>>>> a1cdbfe68f64b4803d3d1535d0431e37728da76c

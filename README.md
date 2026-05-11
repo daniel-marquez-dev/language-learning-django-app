@@ -1,2 +1,5 @@
 QUIZ
+
+
+
 The quiz works like this: you'll see three buttons: English, Polish, and "All." Choose the language you want to learn. The word is in Spanish, and you'll have to translate it into one of the two languages. If you choose "All," the quiz will tell you which idiomatic expression to translate the word into. If you answer correctly, you'll add one point to your score; if you answer incorrectly, you'll subtract one point. If you change the quiz mode (for example, if you switch from translating from Spanish to English to translating from Spanish to Polish), you'll lose points. Allthought you can see the word list with the url that you have in the page.

@@ -16,7 +16,11 @@ def add_word(request):
         form = WordForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("word_list")  # Te devuelve a la lista de palabras
+            return redirect("word_list")  # Return to the word list after adding a new word
     else:
         form = WordForm()
     return render(request, "vocabulary/add_word.html", {"form": form})
+
+ # HOME PAGE VIEW (EXTRA)
+def index(request):
+    return render(request, 'vocabulary/index.html')

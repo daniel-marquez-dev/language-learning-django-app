@@ -1,23 +1,46 @@
+{% load django_bootstrap5 %}
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>List of Words</title>
-    </head>
-    <body>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>List of Words | Vocabulary App</title>
+    {% bootstrap_css %}
+  </head>
+  <body class="bg-light">
+    <main class="container-fluid px-5">
+      <div class="row">
+        <section class="col-12 col-md-8 col-lg-6">
+          <header class="mb-4">
+            <h1 class="display-5 mt-3">List of Words</h1>
+            <p class="text-muted">Review your saved vocabulary and progress.</p>
+          </header>
 
-    <!-- ADD WORD PAGE LINK -->
-    <a href="{% url 'add_word' %}">+ Añadir nueva palabra</a>
-    <hr>
-    <h1>List of Words</h1>
-    <ul>
-        {% for word in words %}
-            <li>
-                <strong>{{ word.original }}</strong>: {{ word.translation }} 
-                <em>({{ word.language }})</em>
-            </li>
-        {% empty %}
-            <li>No words registered yet.</li>
-        {% endfor %}
-    </ul>
-</body>
+          <hr />
+
+          <ul class="list-group shadow-sm">
+            {% for word in words %}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <span class="fw-bold text-primary">{{ word.original }}</span>
+                  <span class="text-muted mx-2">→</span>
+                  <span>{{ word.translation }}</span>
+                </div>
+                <span class="badge bg-secondary rounded-pill">{{ word.language }}</span>
+              </li>
+            {% empty %}
+              <li class="list-group-item list-group-item-warning">No words registered yet.</li>
+            {% endfor %}
+          </ul>
+
+          <footer class="mt-4 pt-3 border-top">
+            <a href="{% url 'add_word' %}" class="btn btn-success px-4 shadow-sm">+ Add New Word</a>
+            <a href="{% url 'index' %}" class="btn btn-outline-primary px-4 shadow-sm">Return to Dashboard</a>
+          </footer>
+        </section>
+      </div>
+    </main>
+
+    {% bootstrap_javascript %}
+  </body>
 </html>

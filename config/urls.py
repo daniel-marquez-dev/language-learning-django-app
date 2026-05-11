@@ -19,11 +19,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-<<<<<<< HEAD
-    path('vocabulary/', include('vocabulary.urls')),
-    
-=======
     path('vocabulary/', include('vocabulary.urls')), # Rutas del Intern 1
     path('quiz/', include('quiz.urls')),             # Rutas de Intern 2
->>>>>>> main
 ]

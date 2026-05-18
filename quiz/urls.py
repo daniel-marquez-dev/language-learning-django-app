@@ -1,6 +1,5 @@
 from django.urls import path
-from . import views
+from .views import quiz_view 
 
-urlpatterns = [
-    path('', views.quiz_view, name='quiz'),
+urlpatterns = [path('', quiz_view, name='quiz'),
 ]

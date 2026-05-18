@@ -4,7 +4,7 @@ from .models import Word
 
 # DISPLAYING WORDS VIEW (DIA 3)
 def word_list(request):
-    words = Word.objects.all()
+    words = Word.objects.all().order_by('language')
     return render(request, "vocabulary/word_list.html", {"words": words})
 
 from django.shortcuts import render, redirect

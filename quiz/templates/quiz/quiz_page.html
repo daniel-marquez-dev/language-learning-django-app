@@ -42,10 +42,22 @@
     </div>
 
     <div class="lang-selector">
-        <a href="?language=English&difficulty={{ current_difficulty|default:'all' }}" class="btn {% if current_language == 'English' %}btn-blue{% else %}btn-outline{% endif %}">English</a>
-        <a href="?language=Polski&difficulty={{ current_difficulty|default:'all' }}" class="btn {% if current_language == 'Polski' %}btn-blue{% else %}btn-outline{% endif %}">Polski</a>
-        <a href="?difficulty={{ current_difficulty|default:'all' }}" class="btn {% if not current_language %}btn-blue{% else %}btn-outline{% endif %}">All</a>
-    </div>
+    <label for="lang-select" style="display: block; width: 100%; margin-bottom: 8px; font-size: 0.9rem; color: #7f8c8d; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">
+        Choose Language:
+    </label>
+    
+    <select id="lang-select" class="btn btn-outline" style="width: 80%; max-width: 300px; padding: 10px; background-color: white; appearance: auto; -webkit-appearance: auto;" onchange="location = this.value;">
+        <option value="?difficulty={{ current_difficulty|default:'all' }}" {% if not current_language %}selected{% endif %}>
+            All Languages
+        </option>
+        
+        {% for lang in available_languages %}
+            <option value="?language={{ lang }}&difficulty={{ current_difficulty|default:'all' }}" {% if current_language == lang %}selected{% endif %}>
+                {{ lang|capfirst }}
+            </option>
+        {% endfor %}
+    </select>
+</div>
 
     <hr style="border: 0; height: 1px; background: #eee; margin: 20px 0;">
 

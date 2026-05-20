@@ -5,16 +5,15 @@ class Language(models.Model):
     name = models.CharField(max_length=50, verbose_name="Language Name")
 
     def __str__(self):
-        # Muestra por ejemplo: "Spanish (ES)"
         return f"{self.name} ({self.code.upper()})"
 
 
 class Word(models.Model):
-    original = models.CharField(max_length=100, verbose_name="Original Word")
-    translation = models.CharField(max_length=100, verbose_name="Translation")
-    
+    text = models.CharField(max_length=100, verbose_name="Word")
     language = models.ForeignKey(Language, on_delete=models.CASCADE, related_name="words", verbose_name="Language")
+    
+    # Relación simétrica auto-referenciada
+    translations = models.ManyToManyField('self', blank=True, verbose_name="Translations")
 
     def __str__(self):
-
-        return f"{self.original} -> {self.translation} ({self.language.name})"
+        return f"{self.text} ({self.language.code.upper()})"

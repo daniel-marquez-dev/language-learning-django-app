@@ -3,30 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz de Idiomas</title>
+    <title>Quiz Multidioma</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
         .card { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 500px; text-align: center; }
         h1 { color: #2c3e50; margin-bottom: 1.5rem; }
-        .lang-selector { margin-bottom: 1rem; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-        
-        /* BOTONES */
         .btn { padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s; text-decoration: none; display: inline-block; font-size: 0.9rem; }
         .btn-blue { background-color: #3498db; color: white; }
         .btn-green { background-color: #2ecc71; color: white; }
-        /* CORRECCIÓN: Eliminado width: 50px para que el texto quepa */
         .btn-outline { border: 2px solid #3498db; color: #3498db; background: transparent; }
         .btn:hover { opacity: 0.8; }
         .btn-orange { background-color: #e67e22 !important; color: white !important; border: none !important; }
-        /* RESULTADOS */
         .result-box { padding: 1rem; border-radius: 8px; margin-bottom: 1rem; font-weight: bold; }
         .correct { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .wrong { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        
         input[type="text"] { width: 80%; padding: 12px; margin: 1rem 0; border: 2px solid #ddd; border-radius: 5px; font-size: 1rem; }
         .footer-link { margin-top: 2rem; display: block; color: #7f8c8d; font-size: 0.9rem; }
+        .difficulty-section { margin-top: 15px; }
         
-        .difficulty-section { margin-top: 10px; }
+        /* Estilo para los selectores de idioma */
+        .config-box { background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #e9ecef; }
+        .select-lang { padding: 8px; border-radius: 5px; border: 1px solid #ccc; font-weight: bold; color: #34495e; width: 45%; }
     </style>
 </head>
 <body>
@@ -36,59 +33,66 @@
 
     <div style="background: #2c3e50; color: white; padding: 15px; border-radius: 10px; margin-bottom: 20px; display: inline-block; min-width: 200px;">
         <span style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Puntuación</span>
-        <div style="font-size: 2.5rem; font-weight: bold; color: #f1c40f;">
-            {{ score }}
-        </div>
+        <div style="font-size: 2.5rem; font-weight: bold; color: #f1c40f;">{{ score }}</div>
     </div>
 
-    <div class="lang-selector">
-        <a href="?language=English&difficulty={{ current_difficulty|default:'all' }}" class="btn {% if current_language == 'English' %}btn-blue{% else %}btn-outline{% endif %}">English</a>
-        <a href="?language=Polski&difficulty={{ current_difficulty|default:'all' }}" class="btn {% if current_language == 'Polski' %}btn-blue{% else %}btn-outline{% endif %}">Polski</a>
-        <a href="?difficulty={{ current_difficulty|default:'all' }}" class="btn {% if not current_language %}btn-blue{% else %}btn-outline{% endif %}">All</a>
-    </div>
+    <div class="config-box">
+        <form method="GET" id="langForm">
+            <input type="hidden" name="difficulty" value="{{ current_difficulty }}">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                
+                <select name="from_lang" class="select-lang" onchange="document.getElementById('langForm').submit()">
+                    <option value="">Palabra en...</option>
+                    {% for lang in languages %}
+                        <option value="{{ lang.name }}" {% if from_lang == lang.name %}selected{% endif %}>{{ lang.name }}</option>
+                    {% endfor %}
+                </select>
 
-    <hr style="border: 0; height: 1px; background: #eee; margin: 20px 0;">
+                <span style="font-weight: bold; color: #7f8c8d;">➔</span>
+
+                <select name="to_lang" class="select-lang" onchange="document.getElementById('langForm').submit()">
+                    <option value="">Traducir a...</option>
+                    {% for lang in languages %}
+                        <option value="{{ lang.name }}" {% if to_lang == lang.name %}selected{% endif %}>{{ lang.name }}</option>
+                    {% endfor %}
+                </select>
+                
+            </div>
+        </form>
+    </div>
 
     <div class="difficulty-section">
-        <h3 style="margin: 0 0 10px 0; font-size: 0.8rem; color: #7f8c8d; text-transform: uppercase; letter-spacing: 2px;">Dificultad</h3>
         <div class="lang-selector">
-            <a href="?language={{ current_language|default:'' }}&difficulty=easy" 
-               class="btn {% if current_difficulty == 'easy' %}btn-green{% else %}btn-outline{% endif %}">Easy (1-4)</a>
-            
-            <a href="?language={{ current_language|default:'' }}&difficulty=medium" 
-               class="btn {% if current_difficulty == 'medium' %}btn-blue{% else %}btn-outline{% endif %}">Medium (5-8)</a>
-            
-            <a href="?language={{ current_language|default:'' }}&difficulty=hard" 
-                class="btn {% if current_difficulty == 'hard' %}btn-orange{% else %}btn-outline{% endif %}" style="font-size: 0.8rem;">Hard (+8)</a>
+            <a href="?from_lang={{ from_lang|default:'' }}&to_lang={{ to_lang|default:'' }}&difficulty=easy" class="btn {% if current_difficulty == 'easy' %}btn-green{% else %}btn-outline{% endif %}">Easy</a>
+            <a href="?from_lang={{ from_lang|default:'' }}&to_lang={{ to_lang|default:'' }}&difficulty=medium" class="btn {% if current_difficulty == 'medium' %}btn-blue{% else %}btn-outline{% endif %}">Medium</a>
+            <a href="?from_lang={{ from_lang|default:'' }}&to_lang={{ to_lang|default:'' }}&difficulty=hard" class="btn {% if current_difficulty == 'hard' %}btn-orange{% else %}btn-outline{% endif %}">Hard</a>
         </div>
     </div>
 
     <hr style="border: 0; border-top: 2px solid #34495e; margin: 20px 0; opacity: 0.1;">
 
     {% if result %}
-        <div class="result-box {% if '✅' in result %}correct{% else %}wrong{% endif %}">
-            {{ result }}
-        </div>
-        <a href="?language={{ current_language|default:'' }}&difficulty={{ current_difficulty|default:'all' }}" class="btn btn-blue">Siguiente Palabra ➔</a>
+        <div class="result-box {% if '✅' in result %}correct{% else %}wrong{% endif %}">{{ result }}</div>
+        <a href="?from_lang={{ from_lang|default:'' }}&to_lang={{ to_lang|default:'' }}&difficulty={{ current_difficulty|default:'all' }}" class="btn btn-blue">Siguiente Palabra ➔</a>
     {% endif %}
 
     {% if word and not result %}
-        <p style="font-size: 0.9rem; color: #95a5a6;">
-            Modo: <strong>{{ word.language|upper }}</strong> | Nivel: <strong>{{ current_difficulty|upper|default:'ALL' }}</strong>
+        <p style="font-size: 1rem; color: #7f8c8d;">
+            ¿Cómo se dice en <strong style="color: #2ecc71;">{{ to_lang|upper }}</strong>:
         </p>
-        <h2 style="font-size: 2.8rem; color: #2c3e50; margin: 10px 0;">{{ word.original }}</h2>
+        <h2 style="font-size: 2.8rem; color: #2c3e50; margin: 10px 0;">{{ word.text }}</h2>
 
-        <form method="POST" action="?language={{ current_language|default:'' }}&difficulty={{ current_difficulty|default:'all' }}">
+        <form method="POST" action="?from_lang={{ from_lang|default:'' }}&to_lang={{ to_lang|default:'' }}&difficulty={{ current_difficulty|default:'all' }}">
             {% csrf_token %}
             <input type="hidden" name="word_id" value="{{ word.id }}">
-            <input type="text" name="answer" placeholder="Escribe la traducción..." required autofocus autocomplete="off">
+            <input type="text" name="answer" placeholder="Escribe tu respuesta..." required autofocus autocomplete="off">
             <br>
             <button type="submit" class="btn btn-green" style="width: 80%; padding: 15px;">Comprobar</button>
         </form>
-    {% elif not word and not result %}
+    {% elif not result %}
         <div style="padding: 20px;">
-            <p style="color: #e74c3c; font-weight: bold;">⚠️ No hay palabras disponibles.</p>
-            <p style="font-size: 0.8rem;">Prueba otra combinación de idioma y dificultad.</p>
+            <p style="color: #e74c3c; font-weight: bold;">⚠️ Configuración incompleta o sin palabras.</p>
+            <p style="font-size: 0.8rem; color: #7f8c8d;">Selecciona arriba el idioma de origen y el de destino que quieres practicar.</p>
         </div>
     {% endif %}
 

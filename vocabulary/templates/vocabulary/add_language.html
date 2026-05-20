@@ -4,16 +4,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Add Word | Language App</title>
+    <title>Add Language | Language App</title>
     {% bootstrap_css %}
   </head>
-  <body class="bg-light">
-    <main class="container mt-5">
+  <body class="bg-light d-flex flex-column min-vh-100">
+    <main class="container mt-5 flex-grow-1">
       <div class="row justify-content-center">
         <section class="col-md-6 col-lg-5">
           <article class="card shadow border-0">
-            <header class="card-header bg-primary text-white py-3">
-              <h1 class="h4 mb-0 text-center">Form to Add New Word</h1>
+            <header class="card-header bg-danger text-white py-3">
+              <h1 class="h4 mb-0 text-center fw-bold">Form to Add New Language</h1>
             </header>
 
             <div class="card-body p-4">
@@ -22,22 +22,20 @@
                 {% bootstrap_form form %}
 
                 <footer class="d-grid gap-2 mt-4">
-                  <button type="submit" class="btn btn-success btn-lg">Add Word</button>
-                  <a href="{% url 'index' %}" class="btn btn-link text-secondary">Return to Dashboard</a>
+                  <button type="submit" class="btn btn-danger btn-lg fw-bold">Add Language</button>
+                  <a href="{% url 'index' %}" class="btn btn-outline-secondary py-2 mt-2">Return to Dashboard</a>
                 </footer>
               </form>
             </div>
           </article>
-
-          <aside class="text-center mt-3 text-muted">
-            <small>Complete the fields to expand your vocabulary.</small>
-          </aside>
         </section>
       </div>
     </main>
 
-    <footer class="text-center py-4 mt-auto text-muted">
+    <footer class="text-center py-4 mt-auto text-muted border-top bg-white w-100">
       <small>&copy; 2026 Language Learning App</small>
     </footer>
+
+    {% bootstrap_javascript %}
   </body>
 </html>

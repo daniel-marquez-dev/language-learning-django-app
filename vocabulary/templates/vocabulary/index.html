@@ -1,77 +1,78 @@
 {% load django_bootstrap5 %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard | Language App</title>
     {% bootstrap_css %}
-</head>
-<body class="bg-light">
-
+  </head>
+  <body class="bg-light">
     <nav class="navbar navbar-dark bg-dark mb-5 shadow-sm">
-        <div class="container-fluid ms-4">
-            <span class="navbar-brand mb-0 h1">Language Learning App</span>
-        </div>
+      <div class="container-fluid ms-4">
+        <span class="navbar-brand mb-0 h1">Language Learning App</span>
+      </div>
     </nav>
 
     <main class="container-fluid px-5">
-        <header class="mb-5">
-            <h1 class="display-4 fw-bold text-dark">Welcome, Daniel</h1>
-            <p class="lead text-muted">What would you like to practice today?</p>
-        </header>
+      <header class="mb-5">
+        <h1 class="display-4 fw-bold text-dark">Welcome to the Language Learning App</h1>
+        <p class="lead text-muted">What language would you like to practice today?</p>
+      </header>
 
-        <section class="row g-4">
-            
-            <article class="col-12 col-md-6 col-lg-4">
-                <div class="card h-100 shadow-sm border-0">
-                    <div class="card-body d-flex flex-column">
-                        <h2 class="card-title h4 text-primary">My Words</h2>
-                        <p class="card-text text-muted">Review your personal dictionary and manage the vocabulary you have saved.</p>
-                        <a href="{% url 'word_list' %}" class="btn btn-outline-primary mt-auto py-2">
-                            View full list
-                        </a>
-                    </div>
-                </div>
-            </article>
-
-            <article class="col-12 col-md-6 col-lg-4">
-                <div class="card h-100 shadow-sm border-0">
-                    <div class="card-body d-flex flex-column">
-                        <h2 class="card-title h4 text-success">Add Vocabulary</h2>
-                        <p class="card-text text-muted">Register new words, their translations, and languages to keep growing.</p>
-                        <a href="{% url 'add_word' %}" class="btn btn-success mt-auto py-2">
-                            + New word
-                        </a>
-                    </div>
-                </div>
-            </article>
-
-            <article class="col-12 col-md-6 col-lg-4">
-                <div class="card h-100 shadow-sm border-0 bg-dark text-white">
-                    <div class="card-body d-flex flex-column">
-                        <h2 class="card-title h4 text-warning">Quiz Mode</h2>
-                        <p class="card-text">Test your memory with a quick game based on your registered words.</p>
-                        <a href="{% url 'quiz' %}" class="btn btn-warning mt-auto py-2 fw-bold">
-                            Start playing!
-                        </a>
-                    </div>
-                </div>
-            </article>
-
-        </section>
-
-        <aside class="mt-5 pt-4 border-top text-center">
-            <div class="alert alert-info border-0 shadow-sm d-inline-block">
-                <strong>Tip of the day:</strong> Reviewing for 10 minutes every morning improves retention by 40%.
+      <section class="row g-4">
+        <article class="col-12 col-md-6 col-lg-4">
+          <div class="card h-100 shadow-sm border-1 text-center">
+            <div class="card-body d-flex flex-column">
+              <h2 class="card-title h4 text-primary">My Words</h2>
+              <p class="card-text text-muted">Review your personal dictionary and manage the vocabulary you have saved.</p>
+              <a href="{% url 'word_list' %}" class="btn btn-primary mt-auto py-2">View full list</a>
             </div>
-        </aside>
+          </div>
+        </article>
+
+        <article class="col-12 col-md-6 col-lg-4">
+          <div class="card h-100 shadow-sm border-1">
+            <div class="card-body d-flex flex-column text-center">
+              <h2 class="card-title h4 text-success">Add Vocabulary</h2>
+              <p class="card-text text-muted">Register new words, their translations, and languages to keep growing.</p>
+              <a href="{% url 'add_word' %}" class="btn btn-success mt-auto py-2">New word</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="col-12 col-md-6 col-lg-4">
+          <div class="card h-100 shadow-sm border-1">
+            <div class="card-body d-flex flex-column text-center">
+              <h2 class="card-title h4 text-danger">Add Language</h2>
+              <p class="card-text text-muted">Register a new language to your learning journey.</p>
+              <a href="{% url 'add_language' %}" class="btn btn-danger mt-auto py-2 fw-bold">New language</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="col-12 col-md-6 col-lg-8 h-100 text-center mx-auto min-vh-100">
+          <div class="card h-100 shadow-sm border-0 bg-dark text-white">
+            <div class="card-body d-flex flex-column">
+              <h2 class="card-title h4 text-warning">Quiz Mode</h2>
+              <p class="card-text">Test your memory with a quick game based on your registered words.</p>
+              <a href="{% url 'quiz' %}" class="btn btn-warning mt-auto py-2 fw-bold">Start playing!</a>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <aside class="mt-5 pt-4 border-top text-center">
+        <div class="alert alert-info border-0 shadow-sm d-inline-block">
+          <strong>Tip of the day:</strong> Reviewing for 10 minutes every morning improves retention by 40%.
+        </div>
+      </aside>
     </main>
 
     <footer class="container-fluid px-5 mt-5 py-4 text-center">
-        <small>© 2026 Language App Project</small>
+      <small>© 2026 Language App Project</small>
     </footer>
 
     {% bootstrap_javascript %}
-</body>
+  </body>
 </html>

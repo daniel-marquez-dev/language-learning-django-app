@@ -7,7 +7,7 @@
     <title>Dashboard | Language App</title>
     {% bootstrap_css %}
   </head>
-  <body class="bg-light" onload="enterName()">
+  <body class="bg-light">
     <nav class="navbar navbar-dark bg-dark mb-5 shadow-sm">
       <div class="container-fluid ms-4">
         <span class="navbar-brand mb-0 h1">Language Learning App</span>
@@ -16,8 +16,8 @@
 
     <main class="container-fluid px-5">
       <header class="mb-5">
-        <h1 class="display-4 fw-bold text-dark">Welcome,</h1>
-        <p class="lead text-muted">What would you like to practice today?</p>
+        <h1 class="display-4 fw-bold text-dark">Welcome to the Language Learning App</h1>
+        <p class="lead text-muted">What language would you like to practice today?</p>
       </header>
 
       <section class="row g-4">
@@ -75,24 +75,4 @@
 
     {% bootstrap_javascript %}
   </body>
-
-  <script>
-    function enterName() {
-      var name
-      do {
-        name = prompt('Please enter your name:')
-
-        if (name === null) {
-          document.querySelector('h1').textContent = 'Welcome, Guest!'
-          return 
-        }
-    
-        if (name.trim() === '') {
-          alert('Name cannot be empty. Please enter your name.')
-        }
-      } while (name.trim() === '')
-    
-      document.querySelector('h1').textContent = 'Welcome, ' + name.trim() + '!'
-    }
-  </script>
 </html>

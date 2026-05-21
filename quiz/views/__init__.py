@@ -1,1 +1,0 @@
-from .quiz import quiz_view

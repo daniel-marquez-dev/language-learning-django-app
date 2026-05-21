@@ -4,73 +4,69 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard | Language App</title>
+    <title>Dashboard | Learn App</title>
     {% bootstrap_css %}
   </head>
   <body class="bg-light">
     <nav class="navbar navbar-dark bg-dark mb-5 shadow-sm">
-      <div class="container-fluid ms-4">
-        <span class="navbar-brand mb-0 h1">Language Learning App</span>
-      </div>
+      <header class="container-fluid ms-4">
+        <span class="navbar-brand mb-0 h1 fw-bold tracking-tight">Learn<span class="text-warning">App</span></span>
+      </header>
     </nav>
 
     <main class="container-fluid px-5">
-      <header class="mb-5">
-        <h1 class="display-4 fw-bold text-dark">Welcome to the Language Learning App</h1>
-        <p class="lead text-muted">What language would you like to practice today?</p>
+      <header class="mb-5 p-5 bg-white rounded-4 shadow-sm border border-light position-relative overflow-hidden" style="background-image: radial-gradient(circle at 90% 10%, rgba(13, 110, 253, 0.03) 0%, rgba(255, 255, 255, 0) 60%);">
+        <span class="position-absolute top-0 start-0 end-0" style="height: 6px; background: linear-gradient(90deg, #0d6efd, #6f42c1, #ffc107);"></span>
+
+        <section class="row align-items-center">
+          <div class="col-md-9">
+            <h1 class="display-4 fw-black text-dark tracking-tight mb-2" style="letter-spacing: -1.5px; font-weight: 800;">Welcome to <span style="background: linear-gradient(135deg, #0d6efd 0%, #6f42c1 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Learn App</span></h1>
+            <p class="lead text-muted mb-0 fw-normal fs-5" style="max-width: 600px;">Master your custom dictionary, track your progress, and challenge your brain with active memory recall.</p>
+          </div>
+        </section>
       </header>
 
-      <section class="row g-4">
-        <article class="col-12 col-md-6 col-lg-4">
-          <div class="card h-100 shadow-sm border-1 text-center">
+      <ul class="row g-4 list-unstyled">
+        <article class="col-12 col-md-6 col-lg-4" id="nav-my-words">
+          <li class="card h-100 shadow-sm border-1 text-center py-5">
             <div class="card-body d-flex flex-column">
-              <h2 class="card-title h4 text-primary">My Words</h2>
-              <p class="card-text text-muted">Review your personal dictionary and manage the vocabulary you have saved.</p>
-              <a href="{% url 'word_list' %}" class="btn btn-primary mt-auto py-2">View full list</a>
+              <h2 class="card-title h4 text-primary fw-bold mb-3">My Words</h2>
+              <p class="card-text text-muted mb-4">Review your personal dictionary and manage the vocabulary you have saved.</p>
+              <a href="{% url 'word_list' %}" class="btn btn-primary mt-auto py-2 px-4">View full list</a>
             </div>
-          </div>
+          </li>
         </article>
 
-        <article class="col-12 col-md-6 col-lg-4">
-          <div class="card h-100 shadow-sm border-1">
-            <div class="card-body d-flex flex-column text-center">
-              <h2 class="card-title h4 text-success">Add Vocabulary</h2>
-              <p class="card-text text-muted">Register new words, their translations, and languages to keep growing.</p>
-              <a href="{% url 'add_word' %}" class="btn btn-success mt-auto py-2">New word</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="col-12 col-md-6 col-lg-4">
-          <div class="card h-100 shadow-sm border-1">
-            <div class="card-body d-flex flex-column text-center">
-              <h2 class="card-title h4 text-danger">Add Language</h2>
-              <p class="card-text text-muted">Register a new language to your learning journey.</p>
-              <a href="{% url 'add_language' %}" class="btn btn-danger mt-auto py-2 fw-bold">New language</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="col-12 col-md-6 col-lg-8 h-100 text-center mx-auto min-vh-100">
-          <div class="card h-100 shadow-sm border-0 bg-dark text-white">
+        <article class="col-12 col-md-6 col-lg-4" id="nav-add-vocabulary">
+          <li class="card h-100 shadow-sm border-1 text-center py-5">
             <div class="card-body d-flex flex-column">
-              <h2 class="card-title h4 text-warning">Quiz Mode</h2>
-              <p class="card-text">Test your memory with a quick game based on your registered words.</p>
-              <a href="{% url 'quiz' %}" class="btn btn-warning mt-auto py-2 fw-bold">Start playing!</a>
+              <h2 class="card-title h4 text-success fw-bold mb-3">Add Vocabulary</h2>
+              <p class="card-text text-muted mb-4">Register new words, their translations, and languages to keep growing.</p>
+              <a href="{% url 'add_word' %}" class="btn btn-success mt-auto py-2 px-4">New word</a>
             </div>
-          </div>
+          </li>
         </article>
-      </section>
+
+        <article class="col-12 col-md-12 col-lg-4" id="nav-quiz-mode">
+          <li class="card h-100 shadow-sm border-0 bg-dark text-white text-center py-5">
+            <div class="card-body d-flex flex-column">
+              <h2 class="card-title h4 text-warning fw-bold mb-3">Quiz Mode</h2>
+              <p class="card-text text-white-50 mb-4">Test your memory with a quick game based on your registered words.</p>
+              <a href="{% url 'quiz' %}" class="btn btn-warning mt-auto py-2 px-4 fw-bold text-dark">Start playing!</a>
+            </div>
+          </li>
+        </article>
+      </ul>
 
       <aside class="mt-5 pt-4 border-top text-center">
-        <div class="alert alert-info border-0 shadow-sm d-inline-block">
+        <blockquote class="alert alert-info border-0 shadow-sm d-inline-block m-0">
           <strong>Tip of the day:</strong> Reviewing for 10 minutes every morning improves retention by 40%.
-        </div>
+        </blockquote>
       </aside>
     </main>
 
     <footer class="container-fluid px-5 mt-5 py-4 text-center">
-      <small>© 2026 Language App Project</small>
+      <small class="text-muted">© 2026 Learn App Project</small>
     </footer>
 
     {% bootstrap_javascript %}

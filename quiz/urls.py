@@ -1,5 +1,8 @@
 from django.urls import path
-from .views import quiz_view 
+from . import views
 
-urlpatterns = [path('', quiz_view, name='quiz'),
+urlpatterns = [
+    path('quiz/', views.quiz_view, name='quiz'),
+    path('quiz/check/', views.quiz_check, name='quiz_check'),
+    path('quiz/next/', views.quiz_next, name='quiz_next'),
 ]

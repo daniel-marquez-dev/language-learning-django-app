@@ -4,40 +4,136 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Add Word | Language App</title>
+    <title>Add Vocabulary | Learn App</title>
     {% bootstrap_css %}
   </head>
   <body class="bg-light">
-    <main class="container mt-5">
-      <div class="row justify-content-center">
-        <section class="col-md-6 col-lg-5">
-          <article class="card shadow border-0">
-            <header class="card-header bg-primary text-white py-3">
-              <h1 class="h4 mb-0 text-center">Form to Add New Word</h1>
-            </header>
+    <div class="container mt-5 mb-5" style="max-width: 700px;">
+      
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show shadow-sm fw-medium" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
 
-            <div class="card-body p-4">
-              <form method="post">
-                {% csrf_token %}
-                {% bootstrap_form form %}
+      <div class="card shadow border-0 p-4 mb-4">
+        <h2 class="fw-bold text-dark mb-1">Add New Vocabulary</h2>
+        <p class="text-muted small">Enter a word along with its direct translation. The system will manage it internally.</p>
+        <hr class="mb-4" />
 
-                <footer class="d-grid gap-2 mt-4">
-                  <button type="submit" class="btn btn-success btn-lg">Add Word</button>
-                  <a href="{% url 'index' %}" class="btn btn-link text-secondary">Return to Dashboard</a>
-                </footer>
-              </form>
+        <form method="POST" autocomplete="off">
+          {% csrf_token %}
+
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger shadow-sm py-2">{{ form.non_field_errors }}</div>
+          {% endif %}
+
+          <div class="row g-4">
+            <div class="col-md-6 border-end">
+              <h5 class="fw-bold text-primary mb-3">Source Term</h5>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">{{ form.word_text.label }}</label>
+                {{ form.word_text }}
+                {% if form.word_text.errors %}
+                  <div class="text-danger small mt-1">{{ form.word_text.errors }}</div>
+                {% endif %}
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">{{ form.word_language.label }}</label>
+                {{ form.word_language }}
+                {% if form.word_language.errors %}
+                  <div class="text-danger small mt-1">{{ form.word_language.errors }}</div>
+                {% endif %}
+              </div>
             </div>
-          </article>
 
-          <aside class="text-center mt-3 text-muted">
-            <small>Complete the fields to expand your vocabulary.</small>
-          </aside>
-        </section>
+            <div class="col-md-6">
+              <h5 class="fw-bold text-success mb-3">Translation</h5>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">{{ form.translation_text.label }}</label>
+                {{ form.translation_text }}
+                {% if form.translation_text.errors %}
+                  <div class="text-danger small mt-1">{{ form.translation_text.errors }}</div>
+                {% endif %}
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">{{ form.translation_language.label }}</label>
+                {{ form.translation_language }}
+                {% if form.translation_language.errors %}
+                  <div class="text-danger small mt-1">{{ form.translation_language.errors }}</div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <div class="d-grid gap-2 mt-4">
+            <button type="submit" name="submit_word" class="btn btn-success fw-bold py-2 shadow-sm">Save and Finish</button>
+            <button type="submit" name="submit_and_continue" class="btn btn-primary fw-bold py-2 shadow-sm">Save and Add Another Translation</button>
+            <a href="{% url 'index' %}" class="btn btn-outline-secondary btn-sm border-0">Return to the Dashboard</a>
+          </div>
+        </form>
       </div>
-    </main>
 
-    <footer class="text-center py-4 mt-auto text-muted">
-      <small>&copy; 2026 Language Learning App</small>
-    </footer>
+      <div class="text-center">
+        <button class="btn btn-outline-primary btn-sm fw-bold shadow-sm"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapseLanguageForm"
+          aria-expanded="{% if lang_form.errors %}true{% else %}false{% endif %}"
+          aria-controls="collapseLanguageForm">
+          ➕ Can't find the language? Add it here
+        </button>
+      </div>
+
+      <div class="collapse mt-3 {% if lang_form.errors %}show{% endif %}" id="collapseLanguageForm">
+        <div class="card card-body shadow-sm border-1 p-4">
+          <h5 class="fw-bold text-dark mb-2">Add New Language</h5>
+          <p class="text-muted small mb-3">Fill in the details to expand your language selector instantly.</p>
+
+          <form method="POST">
+            {% csrf_token %}
+
+            {% if lang_form.non_field_errors %}
+              <div class="alert alert-danger py-2 small">{{ lang_form.non_field_errors }}</div>
+            {% endif %}
+
+            <div class="row g-2 align-items-end">
+              <div class="col-sm-4">
+                <label class="form-label small fw-bold">Language Code (e.g., en, es, pl)</label>
+                {{ lang_form.code }}
+              </div>
+              <div class="col-sm-5">
+                <label class="form-label small fw-bold">Language Name</label>
+                {{ lang_form.name }}
+              </div>
+              <div class="col-sm-3 d-grid">
+                <button type="submit" name="submit_language" class="btn btn-primary fw-bold">Add Language</button>
+              </div>
+            </div>
+
+            {% if lang_form.code.errors or lang_form.name.errors %}
+              <div class="row g-2 mt-2">
+                <div class="col-sm-4">
+                  {% if lang_form.code.errors %}
+                    <div class="text-danger small fw-semibold" style="font-size: 0.75rem;">⚠️ {{ lang_form.code.errors.0 }}</div>
+                  {% endif %}
+                </div>
+                <div class="col-sm-5">
+                  {% if lang_form.name.errors %}
+                    <div class="text-danger small fw-semibold" style="font-size: 0.75rem;">⚠️ {{ lang_form.name.errors.0 }}</div>
+                  {% endif %}
+                </div>
+                <div class="col-sm-3"></div>
+              </div>
+            {% endif %}
+          </form>
+        </div>
+      </div>
+    </div>
+
+    {% bootstrap_javascript %}
   </body>
 </html>

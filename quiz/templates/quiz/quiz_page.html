@@ -1,103 +1,157 @@
+{% load django_bootstrap5 %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Multidioma</title>
+    {% bootstrap_css %}
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .card { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 500px; text-align: center; }
+        .card { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 500px; text-align: center; position: relative; }
         h1 { color: #2c3e50; margin-bottom: 1.5rem; }
         .btn { padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s; text-decoration: none; display: inline-block; font-size: 0.9rem; }
         .btn-blue { background-color: #3498db; color: white; }
         .btn-green { background-color: #2ecc71; color: white; }
         .btn-outline { border: 2px solid #3498db; color: #3498db; background: transparent; }
-        .btn:hover { opacity: 0.8; }
+        .btn:hover { opacity: 0.8; color: white !important; }
         .btn-orange { background-color: #e67e22 !important; color: white !important; border: none !important; }
-        .result-box { padding: 1rem; border-radius: 8px; margin-bottom: 1rem; font-weight: bold; }
-        .correct { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .wrong { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .result-box { padding: 1rem; border-radius: 8px; margin-bottom: 1rem; font-weight: bold; text-align: center; }
+        .msg-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .msg-error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
         input[type="text"] { width: 80%; padding: 12px; margin: 1rem 0; border: 2px solid #ddd; border-radius: 5px; font-size: 1rem; }
         .footer-link { margin-top: 2rem; display: block; color: #7f8c8d; font-size: 0.9rem; }
         .difficulty-section { margin-top: 15px; }
-        
-        /* Estilo para los selectores de idioma */
         .config-box { background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #e9ecef; }
         .select-lang { padding: 8px; border-radius: 5px; border: 1px solid #ccc; font-weight: bold; color: #34495e; width: 45%; }
+        
+        .top-navbar { display: flex; justify-content: flex-end; margin-bottom: 10px; }
+        .ui-lang-select { padding: 6px 12px; border-radius: 8px; border: 2px solid #3498db; color: #3498db; font-weight: bold; background: white; cursor: pointer; font-size: 0.95rem; }
+        
+        .centered-score-box { background: #2c3e50; color: white; padding: 12px 25px; border-radius: 12px; display: inline-block; min-width: 160px; margin-bottom: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
 
 <div class="card">
+    
+    <div class="top-navbar">
+        <select class="ui-lang-select" onchange="location = this.value;">
+            <option value="?ui_lang=en&from_lang={{ from_lang|default:'' }}&to_lang={{ to_lang|default:'' }}&difficulty={{ current_difficulty|default:'all' }}" {% if request.GET.ui_lang == 'en' or not request.GET.ui_lang %}selected{% endif %}>🇬🇧 English</option>
+            <option value="?ui_lang=es&from_lang={{ from_lang|default:'' }}&to_lang={{ to_lang|default:'' }}&difficulty={{ current_difficulty|default:'all' }}" {% if request.GET.ui_lang == 'es' %}selected{% endif %}>🇪🇸 Español</option>
+            <option value="?ui_lang=pl&from_lang={{ from_lang|default:'' }}&to_lang={{ to_lang|default:'' }}&difficulty={{ current_difficulty|default:'all' }}" {% if request.GET.ui_lang == 'pl' %}selected{% endif %}>🇵🇱 Polski</option>
+        </select>
+    </div>
+
+    <div class="centered-score-box">
+        <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; display: block; opacity: 0.85; margin-bottom: 2px;">
+            {% if request.GET.ui_lang == 'es' %}PUNTUACIÓN{% elif request.GET.ui_lang == 'pl' %}PUNKTY{% else %}SCORE{% endif %}
+        </span>
+        <div style="font-size: 2.4rem; font-weight: bold; color: #f1c40f; line-height: 1.1;">{{ score }}</div>
+    </div>
+
     <h1>🎯 Language Quiz</h1>
 
-    <div style="background: #2c3e50; color: white; padding: 15px; border-radius: 10px; margin-bottom: 20px; display: inline-block; min-width: 200px;">
-        <span style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Puntuación</span>
-        <div style="font-size: 2.5rem; font-weight: bold; color: #f1c40f;">{{ score }}</div>
-    </div>
-
     <div class="config-box">
-        <form method="GET" id="langForm">
-            <input type="hidden" name="difficulty" value="{{ current_difficulty }}">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                
-                <select name="from_lang" class="select-lang" onchange="document.getElementById('langForm').submit()">
-                    <option value="">Palabra en...</option>
-                    {% for lang in languages %}
-                        <option value="{{ lang.name }}" {% if from_lang == lang.name %}selected{% endif %}>{{ lang.name }}</option>
-                    {% endfor %}
-                </select>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <select id="from_lang_select" class="select-lang" onchange="cambiarIdioma()">
+                <option value="">
+                    {% if request.GET.ui_lang == 'es' %}Palabra en...{% elif request.GET.ui_lang == 'pl' %}Słowo w...{% else %}Word in...{% endif %}
+                </option>
+                {% for lang in languages %}
+                    <option value="{{ lang.name }}" {% if from_lang == lang.name %}selected{% endif %}>{{ lang.name }}</option>
+                {% endfor %}
+            </select>
 
-                <span style="font-weight: bold; color: #7f8c8d;">➔</span>
+            <span style="font-weight: bold; color: #7f8c8d;">➔</span>
 
-                <select name="to_lang" class="select-lang" onchange="document.getElementById('langForm').submit()">
-                    <option value="">Traducir a...</option>
-                    {% for lang in languages %}
-                        <option value="{{ lang.name }}" {% if to_lang == lang.name %}selected{% endif %}>{{ lang.name }}</option>
-                    {% endfor %}
-                </select>
-                
-            </div>
-        </form>
+            <select id="to_lang_select" class="select-lang" onchange="cambiarIdioma()">
+                <option value="">
+                    {% if request.GET.ui_lang == 'es' %}Traducir a...{% elif request.GET.ui_lang == 'pl' %}Tłumacz na...{% else %}Translate to...{% endif %}
+                </option>
+                {% for lang in languages %}
+                    <option value="{{ lang.name }}" {% if to_lang == lang.name %}selected{% endif %}>{{ lang.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
     </div>
 
-    <div class="difficulty-section">
+    <div class="difficulty-section" style="margin-bottom: 20px;">
         <div class="lang-selector">
-            <a href="?from_lang={{ from_lang|default:'' }}&to_lang={{ to_lang|default:'' }}&difficulty=easy" class="btn {% if current_difficulty == 'easy' %}btn-green{% else %}btn-outline{% endif %}">Easy</a>
-            <a href="?from_lang={{ from_lang|default:'' }}&to_lang={{ to_lang|default:'' }}&difficulty=medium" class="btn {% if current_difficulty == 'medium' %}btn-blue{% else %}btn-outline{% endif %}">Medium</a>
-            <a href="?from_lang={{ from_lang|default:'' }}&to_lang={{ to_lang|default:'' }}&difficulty=hard" class="btn {% if current_difficulty == 'hard' %}btn-orange{% else %}btn-outline{% endif %}">Hard</a>
+            <a href="/quiz/next/?ui_lang={{ request.GET.ui_lang|default:'en' }}&from_lang={{ from_lang|default:'' }}&to_lang={{ to_lang|default:'' }}&difficulty=easy" class="btn {% if current_difficulty == 'easy' %}btn-green{% else %}btn-outline{% endif %}">
+                {% if request.GET.ui_lang == 'es' %}Fácil{% elif request.GET.ui_lang == 'pl' %}Łatwy{% else %}Easy{% endif %}
+            </a>
+            <a href="/quiz/next/?ui_lang={{ request.GET.ui_lang|default:'en' }}&from_lang={{ from_lang|default:'' }}&to_lang={{ to_lang|default:'' }}&difficulty=medium" class="btn {% if current_difficulty == 'medium' %}btn-blue{% else %}btn-outline{% endif %}">
+                {% if request.GET.ui_lang == 'es' %}Medio{% elif request.GET.ui_lang == 'pl' %}Średni{% else %}Medium{% endif %}
+            </a>
+            <a href="/quiz/next/?ui_lang={{ request.GET.ui_lang|default:'en' }}&from_lang={{ from_lang|default:'' }}&to_lang={{ to_lang|default:'' }}&difficulty=hard" class="btn {% if current_difficulty == 'hard' %}btn-orange{% else %}btn-outline{% endif %}">
+                {% if request.GET.ui_lang == 'es' %}Difícil{% elif request.GET.ui_lang == 'pl' %}Trudny{% else %}Hard{% endif %}
+            </a>
         </div>
     </div>
 
     <hr style="border: 0; border-top: 2px solid #34495e; margin: 20px 0; opacity: 0.1;">
 
-    {% if result %}
-        <div class="result-box {% if '✅' in result %}correct{% else %}wrong{% endif %}">{{ result }}</div>
-        <a href="?from_lang={{ from_lang|default:'' }}&to_lang={{ to_lang|default:'' }}&difficulty={{ current_difficulty|default:'all' }}" class="btn btn-blue">Siguiente Palabra ➔</a>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="result-box {% if message.tags == 'success' %}msg-success{% else %}msg-error{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
     {% endif %}
 
-    {% if word and not result %}
-        <p style="font-size: 1rem; color: #7f8c8d;">
-            ¿Cómo se dice en <strong style="color: #2ecc71;">{{ to_lang|upper }}</strong>:
-        </p>
-        <h2 style="font-size: 2.8rem; color: #2c3e50; margin: 10px 0;">{{ word.text }}</h2>
+    {% if word %}
+        {% if request.session.has_answered %}
+            <div style="margin: 20px 0;">
+                <a href="/quiz/next/?ui_lang={{ request.GET.ui_lang|default:'en' }}&from_lang={{ from_lang|default:'' }}&to_lang={{ to_lang|default:'' }}&difficulty={{ current_difficulty|default:'all' }}" class="btn btn-blue" style="width: 80%; padding: 15px;">
+                    {% if request.GET.ui_lang == 'es' %}Siguiente Palabra ➔{% elif request.GET.ui_lang == 'pl' %}Następne słowo ➔{% else %}Next Word ➔{% endif %}
+                </a>
+            </div>
+        {% else %}
+            <p style="font-size: 1rem; color: #7f8c8d;">
+                {% if request.GET.ui_lang == 'es' %}¿Cómo se dice en{% elif request.GET.ui_lang == 'pl' %}Jak mówisz po{% else %}How do you say in{% endif %} 
+                <strong style="color: #2ecc71;">{{ to_lang|upper }}</strong>:
+            </p>
+            <h2 style="font-size: 2.8rem; color: #2c3e50; margin: 10px 0;">{{ word.text }}</h2>
 
-        <form method="POST" action="?from_lang={{ from_lang|default:'' }}&to_lang={{ to_lang|default:'' }}&difficulty={{ current_difficulty|default:'all' }}">
-            {% csrf_token %}
-            <input type="hidden" name="word_id" value="{{ word.id }}">
-            <input type="text" name="answer" placeholder="Escribe tu respuesta..." required autofocus autocomplete="off">
-            <br>
-            <button type="submit" class="btn btn-green" style="width: 80%; padding: 15px;">Comprobar</button>
-        </form>
-    {% elif not result %}
+            <form method="POST" action="/quiz/check/">
+                {% csrf_token %}
+                <input type="hidden" name="word_id" value="{{ word.id }}">
+                <input type="hidden" name="ui_lang" value="{{ request.GET.ui_lang|default:'en' }}">
+                <input type="hidden" name="from_lang" value="{{ from_lang|default:'' }}">
+                <input type="hidden" name="to_lang" value="{{ to_lang|default:'' }}">
+                <input type="hidden" name="difficulty" value="{{ current_difficulty|default:'all' }}">
+
+                <input type="text" name="answer" placeholder="{% if request.GET.ui_lang == 'es' %}Escribe tu respuesta...{% elif request.GET.ui_lang == 'pl' %}Wpisz swoją odpowiedź...{% else %}Write your answer...{% endif %}" required autofocus autocomplete="off">
+                <br>
+                <button type="submit" class="btn btn-green" style="width: 80%; padding: 15px;">
+                    {% if request.GET.ui_lang == 'es' %}Comprobar respuesta{% elif request.GET.ui_lang == 'pl' %}Sprawdź odpowiedź{% else %}Check answer{% endif %}
+                </button>
+            </form>
+        {% endif %}
+    {% else %}
         <div style="padding: 20px;">
-            <p style="color: #e74c3c; font-weight: bold;">⚠️ Configuración incompleta o sin palabras.</p>
-            <p style="font-size: 0.8rem; color: #7f8c8d;">Selecciona arriba el idioma de origen y el de destino que quieres practicar.</p>
+            <p style="color: #e74c3c; font-weight: bold;">
+                {% if request.GET.ui_lang == 'es' %}⚠️ Configuración incompleta o sin palabras.{% elif request.GET.ui_lang == 'pl' %}⚠️ Niekompletna konfiguracja lub brak słów.{% else %}⚠️ Incomplete configuration or no words available.{% endif %}
+            </p>
         </div>
     {% endif %}
 
-    <a href="/vocabulary/" class="footer-link">Ver lista completa de palabras</a>
+    <a href="/vocabulary/" class="footer-link">
+        {% if request.GET.ui_lang == 'es' %}Ver lista de palabras{% elif request.GET.ui_lang == 'pl' %}Zobacz listę słów{% else %}View words list{% endif %}
+    </a>
 </div>
+
+<script>
+function cambiarIdioma() {
+    const uiLang = "{{ request.GET.ui_lang|default:'en' }}";
+    const fromLang = document.getElementById('from_lang_select').value;
+    const toLang = document.getElementById('to_lang_select').value;
+    const difficulty = "{{ current_difficulty|default:'all' }}";
+    
+    window.location.href = `?ui_lang=${uiLang}&from_lang=${fromLang}&to_lang=${toLang}&difficulty=${difficulty}`;
+}
+</script>
 
 </body>
 </html>

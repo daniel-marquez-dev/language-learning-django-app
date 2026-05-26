@@ -36,13 +36,30 @@ def add_word(request):
                 t_text = form.cleaned_data.get('translation_text')
                 t_lang = form.cleaned_data.get('translation_language')
 
-                # 🚀 VALIDACIÓN DE DUPLICADOS:
-                # Comprobamos si ya existe la palabra origen con su idioma
+                # 🛡️ ESCUDO 1: Validar idioma de la palabra ORIGEN
+                existing_word_different_lang = Word.objects.filter(text__iexact=w_text).exclude(language=w_lang).first()
+
+                if existing_word_different_lang:
+                    form.add_error(
+                        'word_language', 
+                        f'The word "{w_text}" is already registered under the language "{existing_word_different_lang.language.name}". You cannot assign it to "{w_lang.name}".'
+                    )
+                    return render(request, "vocabulary/add_word.html", {"form": form, "lang_form": lang_form})
+
+                # 🛡️ ESCUDO 2: Validar idioma de la palabra TRADUCCIÓN
+                existing_trans_different_lang = Word.objects.filter(text__iexact=t_text).exclude(language=t_lang).first()
+
+                if existing_trans_different_lang:
+                    form.add_error(
+                        'translation_language', 
+                        f'The translation "{t_text}" is already registered under the language "{existing_trans_different_lang.language.name}". You cannot assign it to "{t_lang.name}".'
+                    )
+                    return render(request, "vocabulary/add_word.html", {"form": form, "lang_form": lang_form})
+
+                # 🔍 VALIDACIÓN 3: Verificar duplicados exactos ya vinculados
                 word_exists = Word.objects.filter(text=w_text, language=w_lang).exists()
-                # Comprobamos si ya existe la palabra traducción con su idioma
                 trans_exists = Word.objects.filter(text=t_text, language=t_lang).exists()
 
-                # Si ambas existen, comprobamos si además ya están conectadas entre sí
                 if word_exists and trans_exists:
                     already_linked = Word.objects.filter(
                         text=w_text, 
@@ -55,18 +72,11 @@ def add_word(request):
                         form.add_error(None, f'The word "{w_text}" and its translation "{t_text}" are already registered and linked.')
                         return render(request, "vocabulary/add_word.html", {"form": form, "lang_form": lang_form})
 
-                # Si no están vinculadas, pero quieres avisar de que los términos individuales ya existen por separado
                 if word_exists and trans_exists:
                     form.add_error(None, "Both the source word and the translation already exist in the database as separate terms.")
                     return render(request, "vocabulary/add_word.html", {"form": form, "lang_form": lang_form})
-                elif word_exists:
-                    form.add_error(None, f'The source word "{w_text}" ({w_lang.name}) already exists in your dictionary.')
-                    return render(request, "vocabulary/add_word.html", {"form": form, "lang_form": lang_form})
-                elif trans_exists:
-                    form.add_error(None, f'The translation word "{t_text}" ({t_lang.name}) already exists in your dictionary.')
-                    return render(request, "vocabulary/add_word.html", {"form": form, "lang_form": lang_form})
 
-                # Si pasa todas las validaciones, procedemos a guardar de forma segura
+                # Si el registro pasa todos los filtros de consistencia, se guarda
                 word_obj, created = Word.objects.get_or_create(text=w_text, language=w_lang)
                 translation_obj, _ = Word.objects.get_or_create(text=t_text, language=t_lang)
                 word_obj.translations.add(translation_obj)

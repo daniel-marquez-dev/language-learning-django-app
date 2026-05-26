@@ -31,9 +31,10 @@ def add_word(request):
             form = QuickWordTranslationForm(request.POST) 
             
             if form.is_valid():
-                w_text = form.cleaned_data.get('word_text')
+                # 🚀 FORMATEO AUTOMÁTICO: Quitamos espacios (.strip()) y aplicamos primera mayúscula (.capitalize())
+                w_text = form.cleaned_data.get('word_text').strip().capitalize()
                 w_lang = form.cleaned_data.get('word_language')
-                t_text = form.cleaned_data.get('translation_text')
+                t_text = form.cleaned_data.get('translation_text').strip().capitalize()
                 t_lang = form.cleaned_data.get('translation_language')
 
                 # 🛡️ ESCUDO 1: Validar idioma de la palabra ORIGEN
@@ -56,15 +57,15 @@ def add_word(request):
                     )
                     return render(request, "vocabulary/add_word.html", {"form": form, "lang_form": lang_form})
 
-                # 🔍 VALIDACIÓN 3: Verificar duplicados exactos ya vinculados
-                word_exists = Word.objects.filter(text=w_text, language=w_lang).exists()
-                trans_exists = Word.objects.filter(text=t_text, language=t_lang).exists()
+                # 🔍 VALIDACIÓN 3: Verificar duplicados
+                word_exists = Word.objects.filter(text__iexact=w_text, language=w_lang).exists()
+                trans_exists = Word.objects.filter(text__iexact=t_text, language=t_lang).exists()
 
                 if word_exists and trans_exists:
                     already_linked = Word.objects.filter(
-                        text=w_text, 
+                        text__iexact=w_text, 
                         language=w_lang, 
-                        translations__text=t_text, 
+                        translations__text__iexact=t_text, 
                         translations__language=t_lang
                     ).exists()
                     
@@ -75,10 +76,22 @@ def add_word(request):
                 if word_exists and trans_exists:
                     form.add_error(None, "Both the source word and the translation already exist in the database as separate terms.")
                     return render(request, "vocabulary/add_word.html", {"form": form, "lang_form": lang_form})
+                elif word_exists:
+                    form.add_error(None, f'The source word "{w_text}" ({w_lang.name}) already exists in your dictionary.')
+                    return render(request, "vocabulary/add_word.html", {"form": form, "lang_form": lang_form})
+                elif trans_exists:
+                    form.add_error(None, f'The translation word "{t_text}" ({t_lang.name}) already exists in your dictionary.')
+                    return render(request, "vocabulary/add_word.html", {"form": form, "lang_form": lang_form})
 
-                # Si el registro pasa todos los filtros de consistencia, se guarda
-                word_obj, created = Word.objects.get_or_create(text=w_text, language=w_lang)
-                translation_obj, _ = Word.objects.get_or_create(text=t_text, language=t_lang)
+                # 📦 GUARDADO: Al estar ya formateadas en 'w_text' y 't_text', se guardarán hermosas en la BD
+                word_obj = Word.objects.filter(text__iexact=w_text, language=w_lang).first()
+                if not word_obj:
+                    word_obj = Word.objects.create(text=w_text, language=w_lang)
+
+                translation_obj = Word.objects.filter(text__iexact=t_text, language=t_lang).first()
+                if not translation_obj:
+                    translation_obj = Word.objects.create(text=t_text, language=t_lang)
+
                 word_obj.translations.add(translation_obj)
 
                 messages.success(
@@ -87,6 +100,7 @@ def add_word(request):
                 )
                 
                 if "submit_and_continue" in request.POST:
+                    # Pasamos las variables ya formateadas para que el campo retenido también se vea limpio
                     form = QuickWordTranslationForm(initial={
                         'word_text': w_text,
                         'word_language': w_lang
